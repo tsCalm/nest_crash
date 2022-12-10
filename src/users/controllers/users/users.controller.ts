@@ -10,16 +10,16 @@ import {
   ValidationPipe,
 } from '@nestjs/common';
 import { CreateUserDto } from 'src/users/dtos/createUser.dto';
+import { UsersService } from 'src/users/services/users/users.service';
 
 @Controller('users')
 export class UsersController {
+  constructor(private userService: UsersService) {}
+
   @Get()
   getUsers(@Query('sortBy') sortBy: string) {
     console.log(sortBy);
-    return {
-      name: 'limsm',
-      email: 'dlatkdals93@gmail.com',
-    };
+    return this.userService.fetchUsers();
   }
 
   @Get(':id')
