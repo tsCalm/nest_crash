@@ -2,6 +2,8 @@ import {
   Body,
   Controller,
   Get,
+  HttpException,
+  HttpStatus,
   Param,
   ParseIntPipe,
   Post,
@@ -25,15 +27,15 @@ export class UsersController {
   @Get(':id')
   // ParseIntPipe가 없으면 string 타입
   getUser(@Param('id', ParseIntPipe) id: number) {
-    console.log(typeof id);
-    return id;
+    const user = this.userService.fetchUserByUd(id);
+    if (!user)
+      throw new HttpException('User not found', HttpStatus.BAD_REQUEST);
   }
 
   @Post('create')
   // 개별적인 validationPipe
   @UsePipes(new ValidationPipe())
   createUser(@Body() userData: CreateUserDto) {
-    console.log(userData);
-    return 'a';
+    return this.userService.createUser(userData);
   }
 }
